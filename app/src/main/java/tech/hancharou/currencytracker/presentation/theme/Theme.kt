@@ -1,4 +1,4 @@
-package tech.hancharou.currencytracker.ui.theme
+package tech.hancharou.currencytracker.presentation.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
