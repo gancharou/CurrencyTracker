@@ -9,11 +9,13 @@ interface Repository {
 
     suspend fun getExchangeRates(baseCurrency: String): List<ExchangeRate>
 
-    suspend fun getFavoriteCurrencies(): List<String>
+    suspend fun getFavoritePairs(): List<ExchangeRate>
 
-    suspend fun addToFavorites(currencyCode: String)
+    suspend fun addToFavorites(baseCurrency: String, quoteCurrency: String)
 
-    suspend fun removeFromFavorites(currencyCode: String)
+    suspend fun removeFromFavorites(baseCurrency: String, quoteCurrency: String)
+
+    suspend fun isFavorite(baseCurrency: String, quoteCurrency: String): Boolean
 
     suspend fun getLastBaseCurrency(): String
 
