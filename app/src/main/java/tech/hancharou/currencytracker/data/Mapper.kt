@@ -1,6 +1,7 @@
 package tech.hancharou.currencytracker.data
 
 import tech.hancharou.currencytracker.data.nw.ExchangeRatesNW
+import tech.hancharou.currencytracker.data.sw.FavoriteCurrencySW
 import tech.hancharou.currencytracker.domain.model.Currency
 import tech.hancharou.currencytracker.domain.model.ExchangeRate
 
@@ -10,12 +11,22 @@ fun Map<String, String>.toCurrencies(): List<Currency> {
     }
 }
 
-fun ExchangeRatesNW.toExchangeRates(favoriteCodes: Set<String>): List<ExchangeRate> {
-    return this.rates.map { (code, rate) ->
+fun ExchangeRatesNW.toExchangeRates(favoritePairs: Set<Pair<String, String>>): List<ExchangeRate> {
+    return this.rates.map { (quoteCurrency, rate) ->
         ExchangeRate(
-            currencyCode = code,
+            baseCurrency = this.base,
+            quoteCurrency = quoteCurrency,
             rate = rate,
-            isFavorite = favoriteCodes.contains(code)
+            isFavorite = favoritePairs.contains(this.base to quoteCurrency)
         )
     }
+}
+
+fun FavoriteCurrencySW.toExchangeRate(rate: Double): ExchangeRate {
+    return ExchangeRate(
+        baseCurrency = this.baseCurrency,
+        quoteCurrency = this.quoteCurrency,
+        rate = rate,
+        isFavorite = true
+    )
 }
