@@ -1,4 +1,4 @@
-package tech.hancharou.currencytracker.ui.theme
+package tech.hancharou.currencytracker.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 
