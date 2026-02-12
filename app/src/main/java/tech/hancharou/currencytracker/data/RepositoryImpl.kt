@@ -1,9 +1,10 @@
 package tech.hancharou.currencytracker.data
 
 import javax.inject.Inject
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import tech.hancharou.currencytracker.data.nw.ApiService
 import tech.hancharou.currencytracker.data.sw.AppDatabase
-import tech.hancharou.currencytracker.data.sw.FavoriteCurrencySW
 import tech.hancharou.currencytracker.domain.DataStorage
 import tech.hancharou.currencytracker.domain.Repository
 import tech.hancharou.currencytracker.domain.model.Currency
@@ -16,9 +17,37 @@ class RepositoryImpl @Inject constructor(
 ) : Repository {
 
     private val favoriteCurrencyDao = database.favoriteCurrencyDao()
+    private val currencyDao = database.currencyDao()
+    private val refreshMutex = Mutex()
 
     override suspend fun getCurrencies(): List<Currency> {
-        return apiService.getCurrencies().toCurrencies()
+        val cached = currencyDao.getAllCurrencies()
+
+        if (cached.isEmpty()) {
+            refreshCurrencies()
+            return currencyDao.getAllCurrencies().map { it.toCurrency() }
+        }
+
+        return cached.map { it.toCurrency() }
+    }
+
+    override suspend fun refreshCurrencies() {
+        refreshMutex.withLock {
+            val now = System.currentTimeMillis()
+            val lastRefresh = dataStorage.getLastCurrenciesRefreshTime()
+
+            if (now - lastRefresh < 5000) {
+                return
+            }
+
+            val currenciesMap = apiService.getCurrencies()
+            val currenciesSW = currenciesMap.toCurrenciesSW()
+
+            currencyDao.clearCurrencies()
+            currencyDao.insertCurrencies(currenciesSW)
+
+            dataStorage.saveLastCurrenciesRefreshTime(now)
+        }
     }
 
     override suspend fun getExchangeRates(baseCurrency: String): List<ExchangeRate> {
@@ -48,10 +77,7 @@ class RepositoryImpl @Inject constructor(
 
     override suspend fun addToFavorites(baseCurrency: String, quoteCurrency: String) {
         favoriteCurrencyDao.addToFavorites(
-            FavoriteCurrencySW(
-                baseCurrency = baseCurrency,
-                quoteCurrency = quoteCurrency
-            )
+            createFavoriteCurrencySW(baseCurrency, quoteCurrency)
         )
     }
 

@@ -4,16 +4,21 @@ import androidx.compose.ui.graphics.Color
 
 // Primary Colors
 val PrimaryBlue = Color(0xFF5B7FFF)
-val PrimaryBlueLight = Color(0xFF8FA4FF)
-val PrimaryBlueDark = Color(0xFF2F55CC)
+val PrimaryBlueLight = Color(0xFFF0F2F8)
+val PrimaryBlueDark = Color(0xFF0A2FA7)
 
 // Background Colors
 val BackgroundWhite = Color(0xFFFFFFFF)
-val BackgroundGray = Color(0xFFF5F5F5)
+val BackgroundGray = Color(0xFFF6F6F6)
+val BackgroundDropdownItem = Color(0xFFDEE4F8)
+
+//Shadow Colors
+val ShadowColor = Color(0xFF000000)
 
 // Text Colors
 val TextPrimary = Color(0xFF1A1A1A)
-val TextSecondary = Color(0xFF666666)
+val TextHeader = Color(0xFF343138)
+val TextSecondary = Color(0xFF343138)
 val TextGray = Color(0xFF9E9E9E)
 
 // UI Colors
@@ -21,11 +26,12 @@ val CardBackground = Color(0xFFFFFFFF)
 val Divider = Color(0xFFE0E0E0)
 val Success = Color(0xFF4CAF50)
 val Error = Color(0xFFF44336)
-val Warning = Color(0xFFFF9800)
+val Favorite = Color(0xFFFFB800)
+val Border = Color(0xFF9DACDC)
 
 // Bottom Menu
 val BottomMenuIconActive = Color(0xFFDEE4F8)
 val BottomMenuIconInactive = Color.Transparent
-val BottomMenuTextActive = Color(0xFF343138)
+val BottomMenuTextActive = TextSecondary
 val BottomMenuTextInactive = Color(0xFF9DACDC)
 val BottomMenuBackground = BackgroundWhite
