@@ -37,6 +37,11 @@ android {
     buildFeatures {
         compose = true
     }
+
+    buildFeatures {
+        compose = true
+        viewBinding = true
+    }
 }
 
 dependencies {
@@ -52,8 +57,17 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
 
+    // AppCompat
+    implementation("androidx.appcompat:appcompat:1.7.1")
+
+    // ConstraintLayout
+    implementation("androidx.constraintlayout:constraintlayout:2.2.1")
+
     // Compose Navigation
     implementation("androidx.navigation:navigation-compose:2.9.7")
+
+    // Material Icons
+    implementation("androidx.compose.material:material-icons-extended:1.7.8")
 
     // Lifecycle
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.10.0")
@@ -61,6 +75,7 @@ dependencies {
 
     // Hilt
     implementation("com.google.dagger:hilt-android:2.59.1")
+    implementation(libs.androidx.navigation.fragment.ktx)
     ksp("com.google.dagger:hilt-android-compiler:2.59.1")
     implementation("androidx.hilt:hilt-navigation-compose:1.3.0")
 
