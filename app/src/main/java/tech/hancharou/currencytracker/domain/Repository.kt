@@ -7,6 +7,8 @@ interface Repository {
 
     suspend fun getCurrencies(): List<Currency>
 
+    suspend fun refreshCurrencies()
+
     suspend fun getExchangeRates(baseCurrency: String): List<ExchangeRate>
 
     suspend fun getFavoritePairs(): List<ExchangeRate>
