@@ -7,11 +7,19 @@
     <fragment
         android:id="@+id/currenciesFragment"
         android:name="tech.hancharou.currencytracker.presentation.currencies.CurrenciesFragment"
-        android:label="Currencies" />
+        android:label="Currencies" >
+        <action
+            android:id="@+id/action_currenciesFragment_to_sortFragment"
+            app:destination="@id/sortFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/favoritesFragment"
         android:name="tech.hancharou.currencytracker.presentation.favorites.FavoritesFragment"
         android:label="Favorites" />
+    <fragment
+        android:id="@+id/sortFragment"
+        android:name="tech.hancharou.currencytracker.presentation.sort.SortFragment"
+        android:label="SortFragment" />
 
 </navigation>

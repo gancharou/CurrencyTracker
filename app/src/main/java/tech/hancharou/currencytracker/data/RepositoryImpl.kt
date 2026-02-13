@@ -1,6 +1,9 @@
 package tech.hancharou.currencytracker.data
 
 import javax.inject.Inject
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import tech.hancharou.currencytracker.data.nw.ApiService
@@ -58,21 +61,32 @@ class RepositoryImpl @Inject constructor(
         return response.toExchangeRates(favoritePairs)
     }
 
-    override suspend fun getFavoritePairs(): List<ExchangeRate> {
+    override suspend fun getFavoritePairs(): List<ExchangeRate> = coroutineScope {
         val favorites = favoriteCurrencyDao.getAllFavorites()
 
-        return favorites.mapNotNull { favorite ->
-            try {
-                val response = apiService.getExchangeRates(
-                    baseCurrency = favorite.baseCurrency,
-                    symbols = favorite.quoteCurrency
-                )
-                val rate = response.rates[favorite.quoteCurrency] ?: return@mapNotNull null
-                favorite.toExchangeRate(rate)
-            } catch (e: Exception) {
-                null
-            }
+        if (favorites.isEmpty()) {
+            return@coroutineScope emptyList()
         }
+
+        val groupedByBase = favorites.groupBy { it.baseCurrency }
+
+        val results = groupedByBase.map { (baseCurrency, pairs) ->
+            async {
+                val symbols = pairs.joinToString(",") { it.quoteCurrency }
+
+                val response = apiService.getExchangeRates(
+                    baseCurrency = baseCurrency,
+                    symbols = symbols
+                )
+                pairs.map { pair ->
+                    val rate = response.rates[pair.quoteCurrency]
+                        ?: throw Exception("Rate not found for ${pair.quoteCurrency}")
+                    pair.toExchangeRate(rate)
+                }
+            }
+        }.awaitAll().flatten()
+
+        results
     }
 
     override suspend fun addToFavorites(baseCurrency: String, quoteCurrency: String) {
