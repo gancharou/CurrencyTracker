@@ -22,4 +22,15 @@
         android:name="tech.hancharou.currencytracker.presentation.sort.SortFragment"
         android:label="SortFragment" />
 
+    <action
+        android:id="@+id/action_global_currenciesFragment"
+        app:destination="@id/currenciesFragment"
+        app:popUpTo="@id/nav_graph"
+        app:popUpToInclusive="true" />
+    <action
+        android:id="@+id/action_global_favoritesFragment"
+        app:destination="@id/favoritesFragment"
+        app:popUpTo="@id/nav_graph"
+        app:popUpToInclusive="true" />
+
 </navigation>

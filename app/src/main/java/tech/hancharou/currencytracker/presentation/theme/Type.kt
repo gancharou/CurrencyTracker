@@ -7,7 +7,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
 val Typography = Typography(
-    // Title Large - для заголовков экранов
     titleLarge = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Bold,
@@ -16,7 +15,6 @@ val Typography = Typography(
         letterSpacing = 0.sp
     ),
 
-    // Title Medium - для подзаголовков
     titleMedium = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.SemiBold,
@@ -25,7 +23,6 @@ val Typography = Typography(
         letterSpacing = 0.sp
     ),
 
-    // Body Large - для основного текста
     bodyLarge = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Normal,
@@ -34,7 +31,6 @@ val Typography = Typography(
         letterSpacing = 0.5.sp
     ),
 
-    // Body Medium - для secondary текста
     bodyMedium = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Normal,
@@ -43,7 +39,6 @@ val Typography = Typography(
         letterSpacing = 0.25.sp
     ),
 
-    // Label Medium - для кнопок и Bottom Menu
     labelMedium = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Medium,
@@ -52,7 +47,6 @@ val Typography = Typography(
         letterSpacing = 0.sp
     ),
 
-    // Label Small - для мелкого текста
     labelSmall = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Medium,

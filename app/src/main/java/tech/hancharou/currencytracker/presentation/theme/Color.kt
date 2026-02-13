@@ -23,9 +23,6 @@ val TextGray = Color(0xFF767676)
 
 // UI Colors
 val CardBackground = Color(0xFFFFFFFF)
-val Divider = Color(0xFFE0E0E0)
-val Success = Color(0xFF4CAF50)
-val Error = Color(0xFFF44336)
 val Favorite = Color(0xFFFFB800)
 val Border = Color(0xFF9DACDC)
 

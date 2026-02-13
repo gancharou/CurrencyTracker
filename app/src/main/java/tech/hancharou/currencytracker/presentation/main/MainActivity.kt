@@ -91,11 +91,11 @@ class MainActivity : FragmentActivity() {
                 mainViewModel.actions.collect { action ->
                     when (action) {
                         is MainActions.OnCurrenciesClick -> {
-                            navController.navigate(R.id.currenciesFragment)
+                            navController.navigate(R.id.action_global_currenciesFragment)
                         }
 
                         is MainActions.OnFavoritesClick -> {
-                            navController.navigate(R.id.favoritesFragment)
+                            navController.navigate(R.id.action_global_favoritesFragment)
                         }
                     }
                 }
