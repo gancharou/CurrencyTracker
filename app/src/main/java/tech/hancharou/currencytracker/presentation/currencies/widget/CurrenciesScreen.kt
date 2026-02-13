@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -55,6 +54,8 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import kotlinx.collections.immutable.ImmutableList
 import tech.hancharou.currencytracker.R
+import tech.hancharou.currencytracker.presentation.components.CurrencyItem
+import tech.hancharou.currencytracker.presentation.components.ScreenHeader
 import tech.hancharou.currencytracker.presentation.currencies.CurrenciesViewModel
 import tech.hancharou.currencytracker.presentation.currencies.CurrenciesViewState
 import tech.hancharou.currencytracker.presentation.currencies.model.CurrenciesUI
@@ -62,12 +63,9 @@ import tech.hancharou.currencytracker.presentation.theme.BackgroundDropdownItem
 import tech.hancharou.currencytracker.presentation.theme.BackgroundGray
 import tech.hancharou.currencytracker.presentation.theme.BackgroundWhite
 import tech.hancharou.currencytracker.presentation.theme.Border
-import tech.hancharou.currencytracker.presentation.theme.Favorite
 import tech.hancharou.currencytracker.presentation.theme.PrimaryBlue
 import tech.hancharou.currencytracker.presentation.theme.PrimaryBlueDark
-import tech.hancharou.currencytracker.presentation.theme.PrimaryBlueLight
 import tech.hancharou.currencytracker.presentation.theme.ShadowColor
-import tech.hancharou.currencytracker.presentation.theme.TextHeader
 import tech.hancharou.currencytracker.presentation.theme.TextSecondary
 
 @Composable
@@ -181,19 +179,7 @@ private fun CurrenciesContent(
                     .fillMaxSize()
                     .background(BackgroundWhite)
             ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(BackgroundGray)
-                ) {
-                    Text(
-                        text = "Currencies",
-                        style = MaterialTheme.typography.titleLarge,
-                        color = TextHeader,
-                        modifier = Modifier.padding(vertical = 12.dp, horizontal = 16.dp)
-                    )
-                }
-
+                ScreenHeader(title = "Currencies")
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -220,7 +206,7 @@ private fun CurrenciesContent(
                         items = data.exchangeRates,
                         key = { it.currencyCode }
                     ) { item ->
-                        CurrencyItem(
+                        CurrencyItemWrapper(
                             item = item,
                             baseCurrency = data.baseCurrency,
                             onFavoriteToggle = onFavoriteToggle
@@ -503,63 +489,19 @@ private fun DropdownItem(
 }
 
 @Composable
-private fun CurrencyItem(
+private fun CurrencyItemWrapper(
     item: CurrenciesUI.CurrencyItem,
     baseCurrency: String,
     onFavoriteToggle: (String, String) -> Unit
 ) {
-    val onToggleFavorite = remember(baseCurrency, item.currencyCode, onFavoriteToggle) {
+    val onToggle = remember(baseCurrency, item.currencyCode, onFavoriteToggle) {
         { onFavoriteToggle(baseCurrency, item.currencyCode) }
     }
 
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(
-                color = PrimaryBlueLight,
-                shape = RoundedCornerShape(12.dp)
-            )
-            .padding(vertical = 14.dp, horizontal = 16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = item.currencyCode,
-            style = MaterialTheme.typography.bodyMedium.copy(
-                fontWeight = FontWeight.Medium,
-                letterSpacing = 0.sp
-            ),
-            color = TextSecondary
-        )
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = item.rate,
-                style = MaterialTheme.typography.bodyLarge.copy(
-                    fontWeight = FontWeight.SemiBold,
-                    letterSpacing = 0.sp
-                ),
-                color = TextSecondary
-            )
-            Box(
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .clickable(onClick = onToggleFavorite),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    painter = if (item.isFavorite) {
-                        painterResource(R.drawable.ic_favorites_on)
-                    } else {
-                        painterResource(R.drawable.ic_favorites_off)
-                    },
-                    contentDescription = "Favorite",
-                    tint = if (item.isFavorite) Favorite else Border,
-                    modifier = Modifier.size(20.dp)
-                )
-            }
-        }
-    }
+    CurrencyItem(
+        currencyText = item.currencyCode,
+        rate = item.rate,
+        isFavorite = item.isFavorite,
+        onFavoriteToggle = onToggle
+    )
 }

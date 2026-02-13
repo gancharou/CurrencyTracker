@@ -11,7 +11,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import tech.hancharou.currencytracker.domain.DataStorage
 import tech.hancharou.currencytracker.domain.Repository
+import tech.hancharou.currencytracker.domain.model.ExchangeRate
+import tech.hancharou.currencytracker.domain.model.SortType
 import tech.hancharou.currencytracker.presentation.currencies.mapper.buildCurrenciesUI
 import tech.hancharou.currencytracker.presentation.currencies.model.CurrenciesUI
 
@@ -41,7 +44,8 @@ sealed interface CurrenciesActions {
 
 @HiltViewModel
 class CurrenciesViewModel @Inject constructor(
-    private val repository: Repository
+    private val repository: Repository,
+    private val dataStorage: DataStorage
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(initCurrenciesViewState())
@@ -70,13 +74,30 @@ class CurrenciesViewModel @Inject constructor(
         val currencies = repository.getCurrencies()
         val exchangeRates = repository.getExchangeRates(baseCurrency)
 
+        // ✅ Применяем сортировку
+        val sortType = dataStorage.getSortType()
+        val sortedRates = applySorting(exchangeRates, sortType)
+
         val currenciesUI = buildCurrenciesUI(
             baseCurrency = baseCurrency,
             currencies = currencies,
-            exchangeRates = exchangeRates
+            exchangeRates = sortedRates
         )
 
         _state.value = CurrenciesViewState.Content(data = currenciesUI)
+    }
+
+    private fun applySorting(
+        rates: List<ExchangeRate>,
+        sortType: SortType?
+    ): List<ExchangeRate> {
+        return when (sortType) {
+            SortType.CODE_ASC -> rates.sortedBy { it.quoteCurrency }
+            SortType.CODE_DESC -> rates.sortedByDescending { it.quoteCurrency }
+            SortType.RATE_ASC -> rates.sortedBy { it.rate }
+            SortType.RATE_DESC -> rates.sortedByDescending { it.rate }
+            null -> rates
+        }
     }
 
     fun selectBaseCurrency(currencyCode: String) {

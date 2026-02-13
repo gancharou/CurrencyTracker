@@ -1,10 +1,9 @@
-package tech.hancharou.currencytracker.presentation.currencies
+package tech.hancharou.currencytracker.presentation.sort
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -14,15 +13,14 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import tech.hancharou.currencytracker.R
-import tech.hancharou.currencytracker.extension.turnOnBottomBar
-import tech.hancharou.currencytracker.presentation.currencies.widget.CurrenciesScreen
+import tech.hancharou.currencytracker.extension.turnOffBottomBar
+import tech.hancharou.currencytracker.presentation.sort.widget.SortScreen
 import tech.hancharou.currencytracker.presentation.theme.CurrencyTrackerTheme
 
 @AndroidEntryPoint
-class CurrenciesFragment : Fragment() {
+class SortFragment : Fragment() {
 
-    private val viewModel: CurrenciesViewModel by viewModels()
+    private val viewModel: SortViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,7 +32,7 @@ class CurrenciesFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 CurrencyTrackerTheme {
-                    CurrenciesScreen(viewModel = viewModel)
+                    SortScreen(viewModel = viewModel)
                 }
             }
         }
@@ -42,8 +40,7 @@ class CurrenciesFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.refresh()
-        turnOnBottomBar()
+        turnOffBottomBar()
     }
 
     private fun observeActions() {
@@ -51,22 +48,12 @@ class CurrenciesFragment : Fragment() {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.actions.collect { action ->
                     when (action) {
-                        is CurrenciesActions.NavigateToFilters -> {
-                            findNavController().navigate(
-                                R.id.action_currenciesFragment_to_sortFragment
-                            )
-                        }
-
-                        is CurrenciesActions.ShowError -> {
-                            showError(action.message)
+                        is SortActions.NavigateBack -> {
+                            findNavController().popBackStack()
                         }
                     }
                 }
             }
         }
-    }
-
-    private fun showError(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 }

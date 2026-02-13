@@ -19,7 +19,7 @@ val ShadowColor = Color(0xFF000000)
 val TextPrimary = Color(0xFF1A1A1A)
 val TextHeader = Color(0xFF343138)
 val TextSecondary = Color(0xFF343138)
-val TextGray = Color(0xFF9E9E9E)
+val TextGray = Color(0xFF767676)
 
 // UI Colors
 val CardBackground = Color(0xFFFFFFFF)
